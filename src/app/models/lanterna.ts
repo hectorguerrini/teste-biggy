@@ -23,7 +23,7 @@ export class Lanterna {
           console.log(this.bateria.carga);
           this.bateria.carga -= 1;
           if (this.bateria.carga === 0) {
-            this.ligaDesliga();
+            this.status = false;
             clearInterval(this.timer);
           }
         }, 1000);

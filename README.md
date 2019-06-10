@@ -2,26 +2,81 @@
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.9.
 
-## Development server
+## Classes
+As classes Lanterna e Bateria estão no caminho src/app/models
 
-Run `ng serve` for a dev server. Navigate to `http://localhost:4200/`. The app will automatically reload if you change any of the source files.
+### Classe Bateria
+```javascript
+export class Bateria {
+  carga: number;
 
-## Code scaffolding
+  constructor(){
+    this.carga = 100;
+  }
+}
+```
 
-Run `ng generate component component-name` to generate a new component. You can also use `ng generate directive|pipe|service|class|guard|interface|enum|module`.
+### Classe Lanterna
 
-## Build
+```javascript
+import { Bateria } from './bateria';
 
-Run `ng build` to build the project. The build artifacts will be stored in the `dist/` directory. Use the `--prod` flag for a production build.
+export class Lanterna {
+  status: boolean;
+  bateria: Bateria;
+  timer: any;
+  constructor() {
+    this.status = false;
+    this.bateria = new Bateria();
 
-## Running unit tests
+  }
 
-Run `ng test` to execute the unit tests via [Karma](https://karma-runner.github.io).
+  trocarBateria() {
+    this.bateria = new Bateria();
+  }
 
-## Running end-to-end tests
+  ligaDesliga(): void {
+    if (this.bateria.carga > 0) {
+      this.status = !this.status;
+      if (this.status) {
+        console.log('Ligou');
+        this.timer = setInterval(() => {
+          console.log(this.bateria.carga);
+          this.bateria.carga -= 1;
+          if (this.bateria.carga === 0) {
+            this.status = false;
+            clearInterval(this.timer);
+          }
+        }, 1000);
+      } else {
+        clearInterval(this.timer);
+      }
+    }
+  }
+}
+```
 
-Run `ng e2e` to execute the end-to-end tests via [Protractor](http://www.protractortest.org/).
+### Classe App
+Componente principal do angular onde apenas instancio a Classe Lanterna
 
-## Further help
+```javascript
+import { Component, OnInit } from '@angular/core';
+import { Lanterna } from './models/lanterna';
 
-To get more help on the Angular CLI use `ng help` or go check out the [Angular CLI README](https://github.com/angular/angular-cli/blob/master/README.md).
+@Component({
+  selector: 'app-root',
+  templateUrl: './app.component.html',
+  styleUrls: ['./app.component.css']
+})
+export class AppComponent implements OnInit {
+  title = 'biggy-teste';
+  lanterna: Lanterna;
+
+  constructor() {}
+
+  ngOnInit() {
+    this.lanterna = new Lanterna();
+  }
+}
+
+```
